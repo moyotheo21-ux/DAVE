@@ -1,37 +1,18 @@
-deploymentname: DAVE-X
-
+name: dave-x-bot
 services:
-  - name: web
-    type: web
+  - name: bot
+    type: worker
     git:
       branch: main
-    docker:
-      dockerfile: Dockerfile
-      target: ""
-    instance_types:
-      - type: nano
+    build:
+      builder: buildpack
+      build-command: npm install
+    run-command: node index.js
+    instance-type: free
     regions:
       - was
-    ports:
-      - port: 5000
-        protocol: http
-    routes:
-      - path: /
-        port: 5000
-    health_checks:
-      - grace_period: 10
-        interval: 60
-        restart_limit: 3
-        path: /health
-        port: 5000
-        protocol: http
-        timeout: 5
     env:
-      - key: SESSION_ID
+      - name: SESSION_ID
         value: ""
-        scopes:
-          - region: was
-      - key: DATABASE_URL
-        value: ""
-        scopes:
-          - region: was
+      - name: NODE_ENV
+        value: production
